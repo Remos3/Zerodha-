@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apex Trade - Clean Trading Terminal</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- TradingView Lightweight Charts Library -->
+  <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header>
+    <div class="brand">APEX // TRADE</div>
+    <div class="header-stats">
+      <div class="stat-item">Margin Cash: <span id="cash-balance">₹1,00,000.00</span></div>
+      <div class="stat-item">Total P&L: <span id="total-pnl">₹0.00</span></div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Watchlist Panel -->
+    <aside class="watchlist-panel">
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Search eg: infy, tata, reliance..." oninput="filterStocks()" />
+      </div>
+      <ul class="stock-list" id="stock-list-container"></ul>
+    </aside>
+
+    <!-- Main Terminal Area -->
+    <main>
+      <!-- Chart View -->
+      <section class="chart-section">
+        <div class="chart-header">
+          <div>
+            <span id="chart-symbol" style="font-weight: 700; font-size: 1.15rem;">TATASTEEL</span>
+            <span id="chart-price" style="margin-left: 12px; font-weight: 600;">₹142.30</span>
+            <span id="chart-change" style="font-size: 0.85rem; margin-left: 6px;"></span>
+          </div>
+          <div class="chart-actions">
+            <button class="btn btn-buy" onclick="openOrderModal('BUY')">BUY</button>
+            <button class="btn btn-sell" onclick="openOrderModal('SELL')">SELL</button>
+          </div>
+        </div>
+        <div id="tv-chart" class="chart-wrapper"></div>
+      </section>
+
+      <!-- Holdings / Orders Tabs -->
+      <section class="portfolio-section">
+        <div class="tabs">
+          <button class="tab-btn active" id="tab-holdings" onclick="switchTab('holdings')">Holdings</button>
+          <button class="tab-btn" id="tab-orders" onclick="switchTab('orders')">Order Book</button>
+        </div>
+
+        <div id="view-holdings">
+          <table>
+            <thead>
+              <tr>
+                <th>Instrument</th>
+                <th>Qty</th>
+                <th>Avg. Cost</th>
+                <th>LTP</th>
+                <th>Cur. Value</th>
+                <th>P&L</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="holdings-container"></tbody>
+          </table>
+        </div>
+
+        <div id="view-orders" style="display: none;">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Type</th>
+                <th>Instrument</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="orders-container"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Buy/Sell Modal -->
+  <div class="modal-overlay" id="order-modal">
+    <div class="order-card">
+      <div class="modal-header">
+        <div>
+          <span style="font-weight: 600;" id="modal-symbol">STOCK</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">NSE MARKET</span>
+        </div>
+        <button class="btn-close" onclick="closeOrderModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="field-group">
+          <label>Quantity</label>
+          <input type="number" id="order-qty" value="1" min="1" oninput="updateMarginRequired()" />
+        </div>
+        <div class="field-group">
+          <label>Execution Price (Market ₹)</label>
+          <input type="text" id="order-price" readonly />
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+          <span>Margin required:</span>
+          <span id="margin-val" style="color: #fff; font-weight: 600;">₹0.00</span>
+        </div>
+        <div class="order-actions">
+          <button id="modal-submit-btn" class="btn btn-buy" onclick="executeCurrentOrder()">PLACE ORDER</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
